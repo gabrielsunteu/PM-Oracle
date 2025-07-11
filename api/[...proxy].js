@@ -34,3 +34,19 @@ export default async function handler(req) {
     });
   }
 }
+
+if (proxiedPath === 'nslookup') {
+  try {
+    const dns = require('dns').promises;
+    const result = await dns.lookup('api.clob.polymarket.com');
+    return new Response(JSON.stringify({ success: true, address: result.address }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
